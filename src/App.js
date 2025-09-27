@@ -1,38 +1,107 @@
+import { useEffect, useState } from 'react';
 import './App.css';
+import Current from './components/current';
+import Forecast from './components/Forecast';
 
 function App() {
 
-  // https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+  const weatherUrl = (city) =>
+    `https://api.weatherapi.com/v1/forecast.json?key=34d644fece344f64a0c131427252709&q=${city}&days=7&aqi=no&alerts=no`;
+
+  const autoComplete =
+    'https://api.weatherapi.com/v1/search.json?key=34d644fece344f64a0c131427252709&q=';
+
+  const [clicked, setClicked] = useState(false);
+  const [city, setCity] = useState('');
+  const [current, setCurrent] = useState(null);
+  const [forecast, setForecast] = useState(null);
+  const [location, setLocation] = useState('');
+  const [citySuggestion, setCitySuggestion] = useState([]);
+
+  const handleClick = async (clickedCity) => {
+    setCity(clickedCity);
+    setClicked(true);
+
+
+
+
+    try {
+      const res = await fetch(weatherUrl(clickedCity));
+      const data = await res.json();
+      setCurrent(data.current);
+      setForecast(data.forecast);
+      setLocation(data.location.name);
+    } catch (error) {
+      console.error("Failed to fetch weather:", error);
+    }
+  };
+
+  useEffect(() => {
+    const getDataAfterTimeOut = setTimeout(() => {
+      const fetchCitySuggestion = async () => {
+        try {
+          const response = await fetch(autoComplete + city);
+          const data = await response.json();
+          const citySuggestionData = data.map(
+            (curData) => `${curData.name},${curData.region},${curData.country}`
+          );
+          setCitySuggestion(citySuggestionData);
+        } catch (error) {
+          console.error("Failed to fetch suggestions:", error);
+        }
+      };
+
+      if (!clicked && city.length > 1) {
+        fetchCitySuggestion();
+      } else {
+        setCitySuggestion([]);
+        setClicked(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(getDataAfterTimeOut);
+  }, [city]);
+
   return (
     <div className="App">
-      <div className="weather-card">
-        <div className="search">
-          <input type="search" placeholder="enter city name" spellCheck="false"  />
-        </div>
-        <div className="weather">
-          <img className="weather-icon" src="https://static.vecteezy.com/system/resources/previews/024/825/182/non_2x/3d-weather-icon-day-with-rain-free-png.png" alt="..." />
-          <h1 className="temp">15°C </h1>
-          <h2 className="city">new york</h2>
-          <div className="details">
-            <div style={{ display: 'flex' }} className="col">
-              <img className="humi" src="https://cdn-icons-png.flaticon.com/512/1582/1582886.png" />
-              <div className="info">
-                <p className="humidity">50%</p>
-                <p>Humidity</p>
-              </div>
-            </div>
-            <div className="col">
-              <img src="https://cdn-icons-png.flaticon.com/512/136/136712.png" />
-              <div className="info">
-                <p className="wind">15 km/h</p>
-                <p>Wind Speed</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="header">
+        {current?.condition?.icon && (
+          <img src={current.condition.icon} alt="weather icon" />
+        )}
+        Weather Dashboard
       </div>
-       </div>
-      );
+
+      <div className="App-header">
+        <input
+          type="text" id="myInput"
+          className="cityTextBox"
+          placeholder="Enter the City..."
+          onChange={(event) => {
+            setCity(event.target.value);
+            setClicked(false);
+          }}
+          value={city}
+        />
+
+
+
+        <div className="suggestionWrapper">
+          {citySuggestion.map((curCity, index) => (
+            <div
+              key={index}
+              className="suggestion"
+              onClick={() => handleClick(curCity)}
+            >
+              {curCity}
+            </div>
+          ))}
+        </div>
+
+        {current && <Current current={current} city={location} />}
+        {forecast && <Forecast forecast={forecast} />}
+      </div>
+    </div>
+  );
 }
 
-      export default App;
+export default App;
