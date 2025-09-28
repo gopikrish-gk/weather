@@ -21,10 +21,6 @@ function App() {
   const handleClick = async (clickedCity) => {
     setCity(clickedCity);
     setClicked(true);
-
-
-
-
     try {
       const res = await fetch(weatherUrl(clickedCity));
       const data = await res.json();
@@ -35,7 +31,6 @@ function App() {
       console.error("Failed to fetch weather:", error);
     }
   };
-
   useEffect(() => {
     const getDataAfterTimeOut = setTimeout(() => {
       const fetchCitySuggestion = async () => {
@@ -50,7 +45,6 @@ function App() {
           console.error("Failed to fetch suggestions:", error);
         }
       };
-
       if (!clicked && city.length > 1) {
         fetchCitySuggestion();
       } else {
@@ -83,8 +77,6 @@ function App() {
           value={city}
         />
 
-
-
         <div className="suggestionWrapper">
           {citySuggestion.map((curCity, index) => (
             <div
@@ -98,7 +90,7 @@ function App() {
         </div>
 
         {current && <Current current={current} city={location} />}
-        {forecast && <Forecast forecast={forecast} />}
+        {forecast && <Forecast forecast={forecast} city={location} current={current}/>}
       </div>
     </div>
   );
