@@ -90,7 +90,7 @@ function App() {
         </div>
 
         {current && <Current current={current} city={location} />}
-        {forecast && <Forecast forecast={forecast} city={location} current={current}/>}
+        {forecast && <Forecast forecast={forecast} city={location} current={current} />}
       </div>
     </div>
   );

@@ -82,7 +82,8 @@ input:focus {
   outline: none;
   border: none;
 }
-.button-clear{
+
+.button-clear {
   position: "absolute";
   right: "5px";
   top: "50%";
@@ -92,6 +93,7 @@ input:focus {
   cursor: "pointer";
   fontSize: "16px";
 }
+
 /* current weather section */
 .body-div {
   display: flex;
@@ -175,7 +177,7 @@ input:focus {
   max-width: 600px;
   background-color: rgba(255, 255, 255, 0.95);
   border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   padding: 20px;
   box-sizing: border-box;
 }
@@ -186,7 +188,7 @@ input:focus {
   margin-bottom: 20px;
   font-size: 1.5em;
   border-bottom: 2px solid #eee;
-  padding-bottom: 10px ;
+  padding-bottom: 10px;
 }
 
 /* Style details summary like your headers */
@@ -199,20 +201,25 @@ details {
   overflow: hidden;
   color: black;
   width: 70vw;
+  /* flex-wrap: nowrap; */
 }
 
 details[open] {
-  background: rgb(137,247,254);
-  box-shadow: 0 2px 5px rgba(102,166,255,0.5);
+  background: rgb(137, 247, 254);
+  box-shadow: 0 2px 5px rgba(102, 166, 255, 0.5);
 }
 
 summary {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   align-items: center;
+  justify-content: center;
   padding: 15px 10px;
   cursor: pointer;
   font-weight: bold;
-  list-style: none; /* remove default arrow */
+  list-style: none;
+  flex-wrap: wrap;
+
 }
 
 summary::-webkit-details-marker {
@@ -232,13 +239,30 @@ details[open] .summary-arrow {
   color: #000;
 }
 
-.summary-icon { flex-grow: 0; font-size: 1.5em; padding-right: 15px; }
-.summary-date { flex-basis: 30%; }
-.summary-temp { flex-basis: 30%; text-align: center; }
-.summary-rain { flex-basis: 30%; text-align: right; margin-right: 15px;}
+.summary-icon {
+  flex-grow: 0;
+  font-size: 1.5em;
+  padding-right: 15px;
+}
+
+.summary-date {
+  flex-basis: 30%;
+}
+
+.summary-temp {
+  flex-basis: 30%;
+  text-align: center;
+  margin-right: 15px;
+}
+
+.summary-rain {
+  flex-basis: 30%;
+  text-align: left;
+  margin-right: 15px;
+}
 
 .forecast-details {
-  max-height: 200px;
+  /* max-height: 200px; */
   overflow: hidden;
   padding: 15px;
   background-color: #f7f7f7;
@@ -251,12 +275,120 @@ details[open] .summary-arrow {
   font-size: 0.95em;
 }
 
+.no-wrap {
+  white-space: nowrap;
+  /* overflow: hidden; 
+  text-overflow: ellipsis;        */
+}
+
+.hourtrack {
+  display: grid;
+  grid-template-columns: 1fr 1fr 3fr;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 10px;
+}
+
+
+/* Progress container */
+.progress-container {
+  /* width: 90%; */
+  /* max-width: 400px; */
+  background-color: #e0e0e0;
+  border-radius: 30px;
+  overflow: hidden;
+  position: relative;
+  height: 30px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress bar using <progress> */
+.progress-container progress {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* Webkit styles */
+.progress-container progress::-webkit-progress-bar {
+  background: transparent;
+}
+
+.progress-container progress::-webkit-progress-value {
+  background: linear-gradient(135deg, #89f7fe, #66a6ff);
+  border-radius: 30px;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Firefox styles */
+.progress-container progress::-moz-progress-bar {
+  background: linear-gradient(135deg, #89f7fe, #66a6ff);
+  border-radius: 30px;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Show percentage text on top */
+.progress-container .progress-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 50%;
+  transform: translateY(-50%);
+  /* font-weight: bold; */
+  color: #000;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .progress-container {
+    height: 25px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
 /* Responsive */
 @media (max-width:500px) {
-  summary { flex-wrap: wrap; padding: 10px; font-size: 0.9em; }
-  .summary-icon { flex-basis:10%; padding-right:5px; }
-  .summary-date { flex-basis:40%; }
-  .summary-temp { flex-basis:40%; text-align:right; }
-  .summary-rain { flex-basis:80%; text-align:left; order:4; padding-top:5px; }
-  .summary-arrow { flex-basis:10%; order:3; text-align:right; }
+  summary {
+    flex-wrap: wrap;
+    padding: 10px;
+    font-size: 0.9em;
+  }
+
+  .summary-icon {
+    flex-basis: 10%;
+    padding-right: 5px;
+  }
+
+  .summary-date {
+    flex-basis: 40%;
+  }
+
+  .summary-temp {
+    flex-basis: 40%;
+    text-align: right;
+  }
+
+  .summary-rain {
+    flex-basis: 80%;
+    text-align: left;
+    order: 4;
+    padding-top: 5px;
+  }
+
+  .summary-arrow {
+    flex-basis: 10%;
+    order: 3;
+    text-align: right;
+  }
 }
