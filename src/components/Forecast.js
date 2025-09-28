@@ -3,7 +3,7 @@ import React from 'react'
 function Forecast({ city, current, forecast: { forecastday } }) {
   return (
     <div>
-      <h1 class="forecast-heading"> Forecast for {city}</h1>
+      <h1 class="forecast-heading"> Forecast for 1{city}</h1>
 
 
       {
